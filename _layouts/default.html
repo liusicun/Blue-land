@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
+<head>
+  {% include head.html %}
+</head>
+<body class="{{ page.layout }}{% if page.url == '/posts/' %} page-index{% endif %}">
+  <div class="frame">
+    {% include header.html %}
+    <main>
+      {{ content }}
+    </main>
+    {% include footer.html %}
+  </div>
+  <script>
+    (function () {
+      var root = document.documentElement, btn = document.querySelector('.theme-toggle');
+      if (btn) btn.addEventListener('click', function () {
+        var cur = root.getAttribute('data-theme') ||
+          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var next = cur === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('bl-theme', next); } catch (e) {}
+      });
+    })();
+  </script>
+</body>
+</html>

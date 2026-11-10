@@ -1,0 +1,40 @@
+# ===== Blue Land 站点设置 =====
+title: Blue Land
+description: 一片安静的蓝色角落，写点生活、想法和读过的东西。
+# 主页大标题下面的那一句话
+slogan: "Il faut imaginer Sisyphe heureux."
+slogan_lang: fr
+lang: zh-CN
+
+# 部署地址（部署时再改）：
+#   仓库叫 blue-land        → url: "https://<用户名>.github.io"  baseurl: "/blue-land"
+#   仓库叫 <用户名>.github.io → url: "https://<用户名>.github.io"  baseurl: ""
+url: "https://liusicun.github.io"
+baseurl: "/Blue-land"
+
+permalink: /:year/:month/:day/:title/
+timezone: Asia/Hong_Kong
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+feed:
+  path: feed.xml
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

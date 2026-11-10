@@ -1,0 +1,22 @@
+---
+layout: default
+title: 文章
+permalink: /posts/
+---
+<header class="index-head">
+  <h1 class="spaced">文章<i aria-hidden="true"></i></h1>
+  <p class="index-meta">{{ site.posts | size }} 篇</p>
+</header>
+<ol class="index" aria-label="文章列表">
+  {% for post in site.posts %}
+  <li>
+    <a href="{{ post.url | relative_url }}"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
+      <span class="n">{{ forloop.rindex | prepend: '0' | slice: -2, 2 }}</span>
+      <span class="t">{{ post.title }}</span>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>
+    </a>
+  </li>
+  {% else %}
+  <li class="empty">还没有文章。</li>
+  {% endfor %}
+</ol>
