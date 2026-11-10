@@ -8,6 +8,11 @@
 <script>
   try { var t = localStorage.getItem('bl-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
   try { if (sessionStorage.getItem('bl-go')) { sessionStorage.removeItem('bl-go'); document.documentElement.classList.add('arrive'); } } catch (e) {}
+  try { if (new Date().getHours() < 5) document.documentElement.classList.add('night'); } catch (e) {}
+{%- if page.url == '/' %}
+  // 主页开场：每次打开网站只放一遍
+  try { if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('bl-intro')) document.documentElement.classList.add('stone-intro'); } catch (e) {}
+{%- endif %}
 </script>
 <link rel="preload" href="{{ '/assets/fonts/instrument-serif-latin-400-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">

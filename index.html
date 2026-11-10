@@ -5,4 +5,9 @@ title: Home
 <section class="hero">
   <h1 class="hero-title"><span class="blue">Blue</span> Land<i aria-hidden="true"></i></h1>
   <p class="hero-slogan"{% if site.slogan_lang %} lang="{{ site.slogan_lang }}"{% endif %}>{{ site.slogan }}</p>
+  <div class="hill">
+    <svg viewBox="0 0 172 44" aria-hidden="true"><path d="M4 40 C 60 40 104 12 168 8"/><circle r="4" cx="4" cy="36"/></svg>
+    <button class="push" type="button" aria-label="Push the stone again"></button>
+  </div>
 </section>
+<script src="{{ '/assets/js/stone.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
