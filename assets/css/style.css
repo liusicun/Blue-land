@@ -147,19 +147,34 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 }
 
 /* ---------- posts index ---------- */
-.entries {
-  list-style: none; margin: 0 0 clamp(120px, 20vh, 200px); padding: 0;
-  display: grid; gap: clamp(44px, 6vw, 60px);
-  text-align: center;
+.index-head { margin: clamp(88px, 16vh, 160px) 0 clamp(56px, 8vw, 88px); }
+.archive { margin: 0 0 clamp(104px, 18vh, 180px); }
+.year + .year { margin-top: clamp(48px, 7vw, 72px); }
+.year-label {
+  display: flex; align-items: center; gap: 18px;
+  margin: 0 0 6px;
+  font: 400 11px/1 var(--mono); letter-spacing: .24em; color: var(--blue);
 }
-.entries a { display: inline-flex; flex-direction: column; align-items: center; gap: 10px; }
+.year-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.entries { list-style: none; margin: 0; padding: 0; }
+.entries li { border-bottom: 1px solid var(--line); }
+.entries a {
+  display: grid; grid-template-columns: 1fr auto; align-items: baseline;
+  column-gap: 24px; row-gap: 8px;
+  padding: clamp(22px, 3vw, 28px) 0;
+}
 .entries .t {
-  margin-right: -.16em;
-  font: 700 clamp(16px, 1.7vw, 19px)/1.6 var(--display);
-  letter-spacing: .16em;
+  font: 700 clamp(17px, 1.9vw, 21px)/1.45 var(--display);
+  letter-spacing: .06em;
   transition: color .25s;
 }
-.entries time { margin-right: -.24em; font: 400 11px/1 var(--mono); letter-spacing: .24em; color: var(--muted); transition: color .25s; }
+.entries time { font: 400 11px/1 var(--mono); letter-spacing: .2em; color: var(--muted); transition: color .25s; }
+.entries .x {
+  grid-column: 1 / -1;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font: 400 12px/1.7 var(--mono); letter-spacing: .06em; color: var(--muted);
+}
+.entries .x:empty { display: none; }
 .entries a:hover .t, .entries a:hover time { color: var(--blue); }
 
 /* ---------- post ---------- */

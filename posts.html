@@ -3,19 +3,28 @@ layout: default
 title: 文章
 permalink: /posts/
 ---
-<header class="center-head">
+<header class="center-head index-head">
   <h1 class="spaced">文章<i aria-hidden="true"></i></h1>
   <p class="sub">{{ site.posts | size }} 篇</p>
 </header>
-<ul class="entries" aria-label="文章列表">
-  {% for post in site.posts %}
-  <li>
-    <a href="{{ post.url | relative_url }}"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
-      <span class="t">{{ post.title }}</span>
-      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>
-    </a>
-  </li>
+{% assign years = site.posts | group_by_exp: "p", "p.date | date: '%Y'" %}
+<div class="archive">
+  {% for year in years %}
+  <section class="year">
+    <h2 class="year-label">{{ year.name }}</h2>
+    <ul class="entries" aria-label="{{ year.name }} 年的文章">
+      {% for post in year.items %}
+      <li>
+        <a href="{{ post.url | relative_url }}"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
+          <span class="t">{{ post.title }}</span>
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%m.%d" }}</time>
+          <span class="x">{{ post.description | default: post.excerpt | strip_html | strip_newlines | truncate: 56 }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
   {% else %}
-  <li class="sub">还没有文章。</li>
+  <p class="sub">还没有文章。</p>
   {% endfor %}
-</ul>
+</div>
