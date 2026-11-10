@@ -49,16 +49,17 @@
   --gl: max(28px, env(safe-area-inset-left, 0px));
   --gr: max(28px, env(safe-area-inset-right, 0px));
 }
+/* 夜间模式就是“蓝色模式”：夜空蓝底白字，Blue、圆点、分割线这些细节用亮蓝，像白天模式反过来 */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #131211; --ink: #f1efea; --soft: #c9c6bf; --muted: #8d8a83; --line: #2b2926;
-    --blue: #8c9dff; --on-blue: #131211;
+    --paper: #0e1763; --ink: #f4f6ff; --soft: rgba(244, 246, 255, .86); --muted: rgba(244, 246, 255, .66);
+    --line: rgba(244, 246, 255, .3); --blue: #6f83ff; --on-blue: #0e1763;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #131211; --ink: #f1efea; --soft: #c9c6bf; --muted: #8d8a83; --line: #2b2926;
-  --blue: #8c9dff; --on-blue: #131211;
+  --paper: #0e1763; --ink: #f4f6ff; --soft: rgba(244, 246, 255, .86); --muted: rgba(244, 246, 255, .66);
+  --line: rgba(244, 246, 255, .3); --blue: #6f83ff; --on-blue: #0e1763;
   color-scheme: dark;
 }
 
