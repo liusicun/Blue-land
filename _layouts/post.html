@@ -23,4 +23,4 @@ layout: default
   </nav>
   <p class="read-all"><a href="{{ '/posts/' | relative_url }}">All posts</a></p>
 </article>
-<script src="{{ '/assets/js/read.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/read.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
