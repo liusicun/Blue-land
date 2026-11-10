@@ -387,7 +387,7 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 }
 
 /* ---------- footer ---------- */
-.site-footer { padding: 0 0 calc(32px + env(safe-area-inset-bottom, 0px)); text-align: center; font: 10px var(--mono); letter-spacing: .24em; color: var(--muted); }
+.site-footer { padding: 0 0 calc(32px + env(safe-area-inset-bottom, 0px)); text-align: center; font: 10px var(--mono); letter-spacing: .24em; color: var(--blue); }
 
 @media (max-width: 560px) {
   body { font-size: 16px; }
