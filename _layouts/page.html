@@ -1,11 +1,9 @@
 ---
 layout: default
 ---
-<article>
-  <header class="center-head">
-    <h1 class="spaced">{{ page.title }}<i aria-hidden="true"></i></h1>
+<article class="read">
+  <header class="read-head">
+    <h1 class="read-title">{% include title.html t=page.title dot='<i aria-hidden="true"></i>' %}</h1>
   </header>
-  <div class="prose">
-    {{ content }}
-  </div>
+  <div class="prose">{{ content }}</div>
 </article>

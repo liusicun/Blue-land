@@ -1,19 +1,25 @@
 ---
 layout: default
 ---
-<article>
-  <header class="center-head">
-    <time class="sub" datetime="{{ page.date | date_to_xmlschema }}">{% if page.lang == 'en' %}{{ page.date | date: "%b %-d, %Y" | upcase }}{% else %}{{ page.date | date: "%Y.%m.%d" }}{% endif %}</time>
-    <h1 class="post-title">{{ page.title }}</h1>
-    {% if page.tags.size > 0 %}<p class="tags">{% for tag in page.tags %}<a href="{{ '/posts/' | relative_url }}#t={{ tag | uri_escape }}">#{{ tag }}</a>{% endfor %}</p>{% endif %}
+<div class="progress" aria-hidden="true"></div>
+{% assign words = content | strip_html | number_of_words %}
+{% assign mins = words | divided_by: 200 | plus: 1 %}
+<article class="read">
+  <header class="read-head">
+    <h1 class="read-title">{% include title.html t=page.title dot='<i aria-hidden="true"></i>' %}</h1>
+    <p class="read-meta">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
+      {% for tag in page.tags %}<span>·</span><a href="{{ '/posts/' | relative_url }}#t={{ tag | uri_escape }}">{{ tag }}</a>{% endfor %}
+      <span>·</span>{{ mins }} min read
+    </p>
   </header>
   <div class="prose">
     {{ content }}
   </div>
-  <p class="end" aria-hidden="true"><i></i></p>
-  <nav class="pager">
-    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}">← 上一篇</a>{% endif %}
-    <a href="{{ '/posts/' | relative_url }}">全部文章</a>
-    {% if page.next %}<a href="{{ page.next.url | relative_url }}">下一篇 →</a>{% endif %}
+  <nav class="next-prev" aria-label="More posts">
+    {% if page.previous %}<a class="np prev" href="{{ page.previous.url | relative_url }}"><span class="np-label">← Previous</span><span class="np-title"{% if page.previous.lang %} lang="{{ page.previous.lang }}"{% endif %}>{{ page.previous.title }}</span></a>{% else %}<span></span>{% endif %}
+    {% if page.next %}<a class="np next" href="{{ page.next.url | relative_url }}"><span class="np-label">Next →</span><span class="np-title"{% if page.next.lang %} lang="{{ page.next.lang }}"{% endif %}>{{ page.next.title }}</span></a>{% endif %}
   </nav>
+  <p class="read-all"><a href="{{ '/posts/' | relative_url }}">All posts</a></p>
 </article>
+<script src="{{ '/assets/js/read.js' | relative_url }}" defer></script>

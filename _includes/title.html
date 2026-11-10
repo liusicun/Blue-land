@@ -1,0 +1,13 @@
+{%- comment -%}
+  Prints a title so its last word (or last Chinese character) and the blue dot
+  never get split onto separate lines. Use: {% include title.html t=post.title dot=... %}
+{%- endcomment -%}
+{%- assign _t = include.t | strip -%}
+{%- assign _w = _t | split: ' ' -%}
+{%- if _w.size > 1 -%}
+{%- assign _last = _w | last -%}{%- assign _head = _w | pop | join: ' ' -%}
+{{ _head }} <span class="nw">{{ _last }}{{ include.dot }}</span>
+{%- else -%}
+{%- assign _n = _t | size | minus: 1 -%}
+{%- if _n > 0 -%}{{ _t | slice: 0, _n }}<span class="nw">{{ _t | slice: _n, 1 }}{{ include.dot }}</span>{%- else -%}<span class="nw">{{ _t }}{{ include.dot }}</span>{%- endif -%}
+{%- endif -%}

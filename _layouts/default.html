@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
 <head>
   {% include head.html %}
 </head>
-<body class="{{ page.layout }}">
+<body class="{{ page.layout }}{% if page.body_class %} {{ page.body_class }}{% endif %}{% if page.layout == 'post' or page.layout == 'page' %} reading{% endif %}">
   <div class="frame">
     {% include header.html %}
     <main>
@@ -11,6 +11,7 @@
     </main>
     {% include footer.html %}
   </div>
+  <div class="veil" aria-hidden="true"><i></i></div>
   <script>
     (function () {
       var root = document.documentElement, btn = document.querySelector('.theme-toggle');
@@ -21,6 +22,37 @@
         root.setAttribute('data-theme', next);
         try { localStorage.setItem('bl-theme', next); } catch (e) {}
       });
+
+      // 换页动画：点站内链接时内容淡出、蓝点放大，新页面里再收回
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (root.classList.contains('arrive')) setTimeout(function () { root.classList.remove('arrive'); }, 460);
+      document.addEventListener('click', function (e) {
+        if (e.defaultPrevented || reduce || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        var a = e.target.closest && e.target.closest('a[href]');
+        if (!a || a.target || a.hasAttribute('download')) return;
+        var u = new URL(a.href, location.href);
+        if (u.origin !== location.origin || /\.xml$/.test(u.pathname)) return;
+        if (u.pathname === location.pathname && u.search === location.search) return;
+        e.preventDefault();
+        try { sessionStorage.setItem('bl-go', '1'); } catch (err) {}
+        root.classList.add('leave');
+        setTimeout(function () { location.href = a.href; }, 260);
+      });
+      window.addEventListener('pageshow', function (e) { if (e.persisted) root.classList.remove('leave', 'arrive'); });
+
+      // 文章页顶部的阅读进度条
+      var bar = document.querySelector('.progress');
+      if (bar) {
+        var tick = false;
+        var draw = function () {
+          var max = document.documentElement.scrollHeight - innerHeight;
+          bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, scrollY / max) : 0) + ')';
+          tick = false;
+        };
+        addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(draw); } }, { passive: true });
+        addEventListener('resize', draw);
+        draw();
+      }
     })();
   </script>
 </body>

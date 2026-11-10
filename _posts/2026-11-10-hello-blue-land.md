@@ -1,54 +1,47 @@
 ---
-title: 你好，Blue Land
+title: Hello, Blue Land
 date: 2026-11-10 16:30:00 +0800
-tags: [随笔, 说明]
+tags: [Notes, Meta]
+image: /assets/og/2026-11-10-hello-blue-land.png
 ---
 
-这是 Blue Land 的第一篇文章，也是一份小说明：以后想写新文章，照着下面做就行。
+This is the first post on Blue Land, and a small guide to writing the next one.
 
-## 怎么写一篇新文章
+## Writing a new post
 
-1. 在 `_posts` 文件夹里新建一个文件，名字按这个格式：
+1. Add a file to the `_posts` folder, named like this:
 
    ```
-   年-月-日-英文短名.md
+   year-month-day-short-name.md
    ```
 
-   比如 `2026-11-12-yunnan-day-1.md`。短名只用英文字母、数字和连字符，它会变成网址的一部分。
+   For example `2026-11-12-yunnan-day-1.md`. Use only letters, numbers and hyphens in the short name. It becomes part of the address.
 
-2. 文件开头写一小段“头信息”，夹在两行 `---` 中间：
+2. Start the file with a few lines of front matter between two `---` lines:
 
    ```yaml
    ---
-   title: 文章标题
+   title: Post title
    date: 2026-11-12 20:00:00 +0800
-   tags: [旅行, 云南]
+   tags: [Travel, Yunnan]
    ---
    ```
 
-3. 头信息下面就是正文，用 Markdown 写。常用的几种：
+   For a post in Chinese, add a line `lang: zh`.
 
-   - `## 小标题`
-   - `**加粗**`、`*斜体*`
-   - `[链接文字](https://example.com)`
-   - `![图片说明](/assets/images/photo.jpg)`（图片放进 `assets/images` 文件夹）
-   - 行首加 `>` 是引用
+3. Write the post below it in Markdown:
 
-4. 保存、提交到 GitHub，一两分钟后网站会自动更新。
+   - `## Heading`
+   - `**bold**`, `*italic*`
+   - `[link text](https://example.com)`
+   - {% raw %}`![image caption]({{ '/assets/images/photo.jpg' | relative_url }})`{% endraw %} (images go in `assets/images`)
+   - `[^1]` for a note, with `[^1]: the note` at the end. It shows beside the text on wide screens.
+   - Start a line with `>` for a quote
 
-## 写英文文章
+4. Save and commit to GitHub. The site updates itself a minute or two later.
 
-在头信息里加一行 `lang: en`，页面的日期和语言标记就会换成英文：
+## Drafts
 
-```yaml
----
-title: Hello from Blue Land
-lang: en
----
-```
+Unfinished posts go in the `_drafts` folder (no date in the file name). They stay off the site until you move them to `_posts`.
 
-## 草稿
-
-还没写完的文章放进 `_drafts` 文件夹（文件名不用带日期），它不会出现在网站上。写完再挪到 `_posts`。
-
-> 首页会自动按日期列出所有文章，RSS 也会自动更新，不用手动改别的地方。
+> The posts page and the tags update on their own. Nothing else needs changing.

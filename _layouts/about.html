@@ -1,9 +1,17 @@
 ---
 layout: default
 ---
-<section class="hero">
-  <h1 class="hero-title">{{ page.title }}<i aria-hidden="true"></i></h1>
-  <div class="hero-text">
-    {{ content }}
+<div class="cat">
+  <h1 class="cat-title">{{ page.title }}<i aria-hidden="true"></i></h1>
+  <div class="cat-list">
+    <p class="cat-meta">Blue Land</p>
+    <div class="about-body">
+      {% if page.lede %}<p class="about-lede">{% include title.html t=page.lede %}</p>{% endif %}
+      <dl class="facts">
+        {% for f in page.facts %}
+        <div><dt>{{ f.label }}</dt><dd>{{ f.text }}</dd></div>
+        {% endfor %}
+      </dl>
+    </div>
   </div>
-</section>
+</div>

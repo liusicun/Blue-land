@@ -1,13 +1,13 @@
 ---
 layout: about
-title: 关于
+title: About
 permalink: /about/
+body_class: catalog
+# 关于页的文字都在这里改：lede 是那句大字，facts 是下面一行一行的小字
+lede: This is Blue Land.
+facts:
+  - label: Notes on
+    text: Life, ideas and things I have read.
+  - label: Since
+    text: "2026"
 ---
-
-<!-- 关于页只放两三行短句，每行一段。换成你自己的话就好。 -->
-
-这里是 Blue Land。
-
-写点生活、想法和读过的东西。
-
-Since 2026.

@@ -12,7 +12,9 @@
 | `posts.html` | 文章列表页 |
 | `_layouts/`、`_includes/` | 页面模板 |
 | `assets/css/style.css` | 样式（颜色、字体、排版） |
-| `feed.xml` | 不用管，RSS 会自动生成 |
+| `assets/js/read.js` | 文章页的目录、看大图、旁注、回到顶部 |
+| `assets/og/` | 分享卡片图片 |
+| `_tools/share-cards.py` | 生成分享卡片的小程序 |
 
 ## 改主页那句 slogan
 
@@ -31,12 +33,29 @@
    ---
    ```
 
-3. 下面用 Markdown 写正文。英文文章在头信息里加 `lang: en`。
+3. 下面用 Markdown 写正文。网站默认是英文；中文文章在头信息里加一行 `lang: zh`，就会用中文排版。
 4. 提交到 GitHub，一两分钟后网站自动更新。
 
 最省事的办法是直接在 GitHub 网页上操作：打开仓库的 `_posts` 文件夹 → **Add file** → **Create new file** → 写完点 **Commit changes**。手机上也能这样写。
 
-图片放进 `assets/images/`，文章里用 `![说明](/assets/images/xxx.jpg)` 引用。
+图片放进 `assets/images/`，文章里这样引用（网址前面会自动加上 `/Blue-land`）：
+
+```
+![说明]({{ '/assets/images/xxx.jpg' | relative_url }})
+```
+
+想要图注，就写成：
+
+```html
+<figure>
+  <img src="{{ '/assets/images/xxx.jpg' | relative_url }}" alt="说明">
+  <figcaption>图注</figcaption>
+</figure>
+```
+
+注释写 `[^1]`，在文末写 `[^1]: 注释内容`，电脑上会显示在正文右边。
+
+分享卡片：运行 `python3 _tools/share-cards.py`，会给每篇文章生成一张分享图。没生成的文章会用网站的总卡片。
 
 ## 怎么部署到 GitHub Pages
 

@@ -1,10 +1,10 @@
 # ===== Blue Land 站点设置 =====
 title: Blue Land
-description: 一片安静的蓝色角落，写点生活、想法和读过的东西。
+description: A quiet blue corner for notes on life, ideas and things I have read.
 # 主页大标题下面的那一句话
 slogan: "Il faut imaginer Sisyphe heureux."
 slogan_lang: fr
-lang: zh-CN
+lang: en
 
 # 部署地址（部署时再改）：
 #   仓库叫 blue-land        → url: "https://<用户名>.github.io"  baseurl: "/blue-land"
@@ -20,13 +20,13 @@ kramdown:
   input: GFM
 
 plugins:
-  - jekyll-feed
   - jekyll-seo-tag
 
-feed:
-  path: feed.xml
-
 defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/og/default.png   # 分享卡片；每篇文章另有自己的一张
   - scope:
       path: ""
       type: posts
