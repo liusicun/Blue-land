@@ -2,15 +2,17 @@
 layout: default
 ---
 <article>
-  <header class="page-head">
-    <time datetime="{{ page.date | date_to_xmlschema }}">{% if page.lang == 'en' %}{{ page.date | date: "%b %-d, %Y" }}{% else %}{{ page.date | date: "%Y.%m.%d" }}{% endif %}</time>
-    <h1>{{ page.title }}</h1>
+  <header class="center-head">
+    <time class="sub" datetime="{{ page.date | date_to_xmlschema }}">{% if page.lang == 'en' %}{{ page.date | date: "%b %-d, %Y" | upcase }}{% else %}{{ page.date | date: "%Y.%m.%d" }}{% endif %}</time>
+    <h1 class="post-title">{{ page.title }}</h1>
   </header>
   <div class="prose">
     {{ content }}
   </div>
+  <p class="end" aria-hidden="true"><i></i></p>
   <nav class="pager">
-    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}">← {{ page.previous.title }}</a>{% else %}<span></span>{% endif %}
-    {% if page.next %}<a href="{{ page.next.url | relative_url }}">{{ page.next.title }} →</a>{% endif %}
+    {% if page.previous %}<a href="{{ page.previous.url | relative_url }}">← 上一篇</a>{% endif %}
+    <a href="{{ '/posts/' | relative_url }}">全部文章</a>
+    {% if page.next %}<a href="{{ page.next.url | relative_url }}">下一篇 →</a>{% endif %}
   </nav>
 </article>
