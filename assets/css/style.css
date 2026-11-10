@@ -265,10 +265,10 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
   animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both;
 }
 .read-title i { display: inline-block; width: .2em; height: .2em; margin-left: .12em; border-radius: 50%; background: var(--blue); vertical-align: .04em; }
-/* 副标题：标题下面一行斜体小字 */
+/* 副标题：标题下面一行灰色小字，不用斜体 */
 .read-sub {
   margin: 18px 0 0; max-width: 32em;
-  font: italic 400 20px/1.55 var(--serif); letter-spacing: .01em; color: var(--soft);
+  font: 400 18px/1.7 var(--sans); letter-spacing: .01em; color: var(--muted);
   animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both .05s;
 }
 .read-meta {
@@ -316,10 +316,11 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 .prose blockquote {
   margin: 2.4em 0; padding: .1em 0 .1em 1.4em;
   border-left: 2px solid var(--blue);
-  font: italic 400 22px/1.65 var(--serif); letter-spacing: .01em;
+  font: 400 20px/1.75 var(--sans); letter-spacing: .01em;
   color: var(--ink);
 }
 .prose blockquote p { margin: 0; }
+.prose blockquote em { font-style: normal; }
 .prose hr { border: 0; margin: 4em 0; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
 /* 图片比正文宽一点，图注灰色小字 */
 .prose figure { margin: 2.8em calc(-1 * clamp(0px, (100vw - 36rem) / 2 - 24px, 4rem)); }
