@@ -7,13 +7,14 @@ layout: default
 <article class="read">
   <header class="read-head">
     <h1 class="read-title">{% include title.html t=page.title dot='<i aria-hidden="true"></i>' %}</h1>
+    {% if page.subtitle %}<p class="read-sub">{{ page.subtitle }}</p>{% endif %}
     <p class="read-meta">
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>
       {% for tag in page.tags %}<span>·</span><a href="{{ '/posts/' | relative_url }}#t={{ tag | uri_escape }}">{{ tag }}</a>{% endfor %}
       <span>·</span>{{ mins }} min read
     </p>
   </header>
-  <div class="prose">
+  <div class="prose{% if page.numbering == 'roman' %} roman{% endif %}">
     {{ content }}
   </div>
   <nav class="next-prev" aria-label="More posts">
