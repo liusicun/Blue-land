@@ -2,6 +2,7 @@
 // 页面下面是一整块蓝色的土地，上沿是一道坡，石头就在蓝白交界上滚。
 // 开场：先只有石头，土地跟着它从左往右长出来，推到坡顶后标题出现；
 // 之后一遍遍往上推，总差一点到顶。点一下土地，把石头再推上坡顶一次；连点 5 次，它会翻过去。
+// 翻过去以后：如果有藏起来的文章（头信息里写了 hidden: true），页面跟着石头去“山的另一边”。
 (function () {
   var root = document.documentElement, land = document.querySelector('.land'); if (!land) return;
   var fill = land.querySelector('.land-fill'), shape = land.querySelector('.land-shape'), clip = land.querySelector('clipPath path'),
@@ -75,7 +76,8 @@
   requestAnimationFrame(tick);
 
   // 彩蛋：几秒内连点 5 次，石头终于翻过坡顶，从另一边滚走，坡底再来一颗新的
-  var taps = [];
+  var taps = [], overUrl = land.getAttribute('data-over'), gone = false;
+  addEventListener('pageshow', function () { gone = false; });   // 从另一边按返回键回来，可以再翻一次
   function over(d) { mode = 'over'; from = d; up = Math.max(.9, 1.6 * (1 - d)); t0 = null; taps = []; }
   function overAt(s, now) {   // 推到顶 → 翻过去、往下掉、淡出 → 停一下 → 坡底淡入一颗新的
     var a = up, b = a + 1.1, c = b + .9, e = c + .7, k, end = at(1);
@@ -86,6 +88,12 @@
       dot.setAttribute('cy', (end.y - R - 8 * k + 90 * k * k).toFixed(2));
       dot.setAttribute('opacity', (1 - k * k).toFixed(3));
       return null;
+    }
+    if (overUrl && !gone) {   // 石头滚下去了：跟过去看看
+      gone = true;
+      try { sessionStorage.setItem('bl-go', '1'); } catch (err) {}
+      root.classList.add('leave');
+      setTimeout(function () { location.href = overUrl; }, 320);
     }
     if (s < c) { dot.setAttribute('opacity', 0); return 0; }
     if (s < e) { dot.setAttribute('opacity', ((s - c) / .7).toFixed(3)); return 0; }

@@ -54,18 +54,23 @@
 
   --gl: max(28px, env(safe-area-inset-left, 0px));
   --gr: max(28px, env(safe-area-inset-right, 0px));
+
+  --land: var(--blue);        /* 土地的颜色和土地上的字色，“山的另一边”那一页整页用它们 */
+  --on-land: var(--on-blue);
 }
-/* 夜间模式就是“蓝色模式”：夜空蓝底白字，Blue、圆点、分割线这些细节用亮蓝，像白天模式反过来 */
+/* 夜间模式就是“蓝色模式”：夜空蓝底白字，Blue、圆点、分割线这些细节用亮蓝；土地是比夜空更深的山影 */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --paper: #0e1763; --ink: #f4f6ff; --soft: rgba(244, 246, 255, .86); --muted: rgba(244, 246, 255, .66);
     --line: rgba(244, 246, 255, .3); --blue: #6f83ff; --on-blue: #0e1763;
+    --land: #070c3d; --on-land: #f4f6ff;   /* 夜里的土地：比夜空更深的山影 */
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #0e1763; --ink: #f4f6ff; --soft: rgba(244, 246, 255, .86); --muted: rgba(244, 246, 255, .66);
   --line: rgba(244, 246, 255, .3); --blue: #6f83ff; --on-blue: #0e1763;
+  --land: #070c3d; --on-land: #f4f6ff;
   color-scheme: dark;
 }
 
@@ -553,7 +558,7 @@ html.arrive .frame { animation: fade-in .44s ease both; }
   animation: hill-in 1s ease both .2s;
 }
 .lost-slope svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.lost-slope path { fill: var(--blue); transition: fill .3s; }   /* 一小块蓝色的土地，石头从上面滚下来 */
+.lost-slope path { fill: var(--land); transition: fill .3s; }   /* 一小块蓝色的土地，石头从上面滚下来 */
 @keyframes tumble {   /* 沿着坡滚下来，越滚越快，落地后多滚一点再停 */
   0%   { transform: translate(1.34em, -.53em); animation-timing-function: linear; }
   28%  { transform: translate(.97em, -.31em); animation-timing-function: linear; }
@@ -741,8 +746,8 @@ body { overflow-x: clip; }
 .land-on .land { display: block; }   /* 土地是 JS 画的；没有 JS 时整块不显示，主页就是标题加一句话 */
 .land-fill { position: absolute; inset: 0; }
 .land svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
-.land-shape { fill: var(--blue); transition: fill .3s; }
-.land-lines path { fill: none; stroke: var(--on-blue); stroke-width: 1; stroke-linecap: round; opacity: .13; }
+.land-shape { fill: var(--land); transition: fill .3s; }
+.land-lines path { fill: none; stroke: var(--on-land); stroke-width: 1; stroke-linecap: round; opacity: .13; }
 .land-lines path.b { opacity: .26; }
 .land-stone { pointer-events: none; z-index: 2; }
 .land-stone .ridge { fill: none; stroke: none; }
@@ -751,10 +756,10 @@ body { overflow-x: clip; }
   position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; padding: 0; border: 0;
   background: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
-.land .push:focus-visible { outline-color: var(--on-blue); outline-offset: -8px; }
+.land .push:focus-visible { outline-color: var(--on-land); outline-offset: -8px; }
 @media (hover: hover) { .land .push:hover ~ .land-stone circle { r: 7.5px; } }
 /* 主页：版权那行小字直接落在大块土地上，页脚那条轮廓线收起来（没有 JS 时没有大土地，轮廓线照常显示） */
-.land-on .has-land .site-footer { position: relative; z-index: 3; color: var(--on-blue); pointer-events: none; }
+.land-on .has-land .site-footer { position: relative; z-index: 3; color: var(--on-land); pointer-events: none; }
 .land-on .has-land .foot-ridge { display: none; }
 @keyframes hill-in { from { opacity: 0; } }
 /* 开场：先只有石头，土地由 stone.js 跟着石头长出来 */
@@ -781,25 +786,58 @@ body { overflow-x: clip; }
 .post .read { flex: 1; display: flex; flex-direction: column; }
 .outro {
   position: relative; left: 50%; width: 100vw; margin: auto 0 0 -50vw; padding-top: clamp(72px, 12vh, 120px);
-  color: var(--on-blue);   /* margin-top: auto：文章很短时，土地也贴着页面最底 */
+  color: var(--on-land);   /* margin-top: auto：文章很短时，土地也贴着页面最底 */
 }
 .outro-ridge { display: block; width: 100%; height: clamp(56px, 11vw, 150px); margin-bottom: -1px; }
-.outro-ridge path { fill: var(--blue); transition: fill .3s; }
+.outro-ridge path { fill: var(--land); transition: fill .3s; }
 .outro-in {
-  background: var(--blue); transition: background-color .3s;
+  background: var(--land); transition: background-color .3s;
   padding: 12px max(var(--gr), calc(50% - 18rem)) calc(32px + env(safe-area-inset-bottom, 0px)) max(var(--gl), calc(50% - 18rem));
 }
 .outro .next-prev { margin: 0; padding-top: 0; border-top: 0; }
-.outro .np-label, .outro .np-title { color: var(--on-blue); }
+.outro .np-label, .outro .np-title { color: var(--on-land); }
 .outro .np-title { text-decoration: underline transparent; text-decoration-thickness: 1px; text-underline-offset: 6px; transition: text-decoration-color .25s; }
-.outro .np:hover .np-title { color: var(--on-blue); text-decoration-color: currentColor; }
+.outro .np:hover .np-title { color: var(--on-land); text-decoration-color: currentColor; }
 .outro .read-all { margin: 48px 0 0; }
-.outro .read-all a, .outro .read-all a:hover { color: var(--on-blue); background-image: linear-gradient(var(--on-blue), var(--on-blue)); }
+.outro .read-all a, .outro .read-all a:hover { color: var(--on-land); background-image: linear-gradient(var(--on-land), var(--on-land)); }
 .outro-foot { margin: clamp(56px, 9vh, 88px) 0 0; text-align: center; font: 10px var(--mono); letter-spacing: .24em; }
-.outro ::selection { background: var(--on-blue); color: var(--blue); }
-.outro :focus-visible { outline-color: var(--on-blue); }
+.outro ::selection { background: var(--on-land); color: var(--land); }
+.outro :focus-visible { outline-color: var(--on-land); }
 /* 回到顶部的小蓝点底下垫一层纸色，压在蓝色土地上也看得清 */
 .to-top { background: color-mix(in srgb, var(--paper) 88%, transparent); }
+
+/* ---------- 山的另一边 ----------
+   藏起来的那一页（the-other-side.html）：在主页连点五次把石头推过坡顶，才会被带到这里。
+   整页就是那片蓝色的土地：把纸色和蓝色对调，所以页面上的文字、圆点、细线、地图都自动变成土地上的浅色。
+   哪篇文章要藏到这里：在文章头信息里加一行 hidden: true */
+body.side {
+  --paper: var(--land); --ink: var(--on-land);
+  --soft: color-mix(in srgb, var(--on-land) 92%, var(--land));
+  --muted: color-mix(in srgb, var(--on-land) 82%, var(--land));
+  --line: color-mix(in srgb, var(--on-land) 30%, var(--land));
+  --blue: var(--on-land); --on-blue: var(--land);
+}
+html:has(body.side) { background: var(--land); }
+.side main { max-width: 44rem; }
+.side-in { padding: clamp(40px, 9vh, 96px) 0 clamp(48px, 8vh, 96px); }
+.side-kicker { margin: 0 0 18px; font: 400 11px/1.6 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both; }
+.side-title { margin: 0; font: 700 clamp(40px, 9vw, 96px)/1.02 var(--display); letter-spacing: .01em; animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both .05s; }
+.side-title i { display: inline-block; width: .2em; height: .2em; margin-left: .12em; border-radius: 50%; background: var(--blue); vertical-align: .04em; }
+.side-sub { margin: 20px 0 0; font: 400 19px/1.6 var(--serif); color: var(--soft); animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both .1s; }
+.side-list {
+  list-style: none; margin: clamp(40px, 7vh, 72px) 0 0; padding: 22px 0 0; border-top: 1px solid var(--blue);
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 28px 20px;
+  animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both .18s;
+}
+.side-list a { display: grid; gap: 8px; }
+.side .map-box { display: block; grid-area: auto; width: auto; height: auto; margin: 0; aspect-ratio: 1; border: 1px solid var(--blue); transition: background-color .25s; }
+.side-list a:hover .map-box { background: color-mix(in srgb, var(--blue) 10%, transparent); }
+.side-meta { font: 400 10px/1.6 var(--mono); letter-spacing: .14em; color: var(--muted); }
+.side-t { font: 700 16px/1.35 var(--display); letter-spacing: .03em; text-decoration: underline transparent; text-decoration-thickness: 1px; text-underline-offset: 5px; transition: text-decoration-color .25s; }
+.side-list a:hover .side-t { text-decoration-color: currentColor; }
+.side-back { margin: clamp(40px, 7vh, 72px) 0 0; font: 400 11px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; }
+.side-back a { background: linear-gradient(var(--blue), var(--blue)) no-repeat 0 100% / 0 1px; padding-bottom: 2px; transition: background-size .32s cubic-bezier(.3,.7,.2,1); }
+.side-back a:hover { background-size: 100% 1px; }
 
 /* ---------- 打印 / 存成 PDF ----------
    只留文字：白纸黑字，蓝点照旧；导航、动画、目录、进度石头、上下篇都不印。
@@ -815,8 +853,9 @@ body { overflow-x: clip; }
     animation: none !important; transition: none !important;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;   /* 蓝点是背景色画的，不加这句会被浏览器省掉 */
   }
-  html, body { background: #fff; }
+  html, body, html:has(body.side) { background: #fff; }
   body { overflow: visible; }
+  body.side { --paper: #fff; --ink: #111318; --soft: #23262e; --muted: #5d606a; --line: #d9dbe2; --blue: #1c33c9; --on-blue: #fff; }
 
   /* 不印的东西 */
   .site-nav, .site-footer, .veil, .progress, .toc, .to-top, .lightbox,

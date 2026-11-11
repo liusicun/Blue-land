@@ -1,0 +1,32 @@
+---
+layout: default
+title: The other side
+permalink: /the-other-side/
+body_class: side
+# 山的另一边：只有在主页连点五次、把石头推过坡顶的人才会被带到这里。
+# 头信息里写了 hidden: true 的文章都列在这一页，不出现在 Posts 目录里。
+# 下面 kicker / sub 两句话可以随便改。
+kicker: You pushed it over
+sub: Things kept on the far side of the hill.
+---
+{% assign hid = site.posts | where_exp: "p", "p.hidden == true" %}
+<div class="side-in">
+  <p class="side-kicker">{{ page.kicker }}</p>
+  <h1 class="side-title">{% include title.html t=page.title dot='<i aria-hidden="true"></i>' %}</h1>
+  <p class="side-sub">{{ page.sub }}</p>
+  <ul class="side-list" aria-label="Posts on the other side">
+    {% for post in hid %}
+    <li>
+      <a href="{{ post.url | relative_url }}"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
+        <span class="map-box" aria-hidden="true"><svg class="map" data-seed="{{ post.title | escape }}"></svg></span>
+        <span class="side-meta">Nº {% if forloop.rindex < 10 %}0{% endif %}{{ forloop.rindex }} · {{ post.date | date: "%Y.%m.%d" }}</span>
+        <span class="side-t">{% include title.html t=post.title %}</span>
+      </a>
+    </li>
+    {% else %}
+    <li class="side-meta">Nothing here yet.</li>
+    {% endfor %}
+  </ul>
+  <p class="side-back"><a href="{{ '/' | relative_url }}">← Back over the hill</a></p>
+</div>
+<script src="{{ '/assets/js/map.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

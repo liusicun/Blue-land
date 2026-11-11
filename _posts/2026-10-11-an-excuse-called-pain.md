@@ -4,6 +4,7 @@ subtitle: "I don’t have a title yet, nor do I have a topic in mind again (just
 date: 2026-10-11 21:00:00 +0800
 tags: [Notes]
 image: /assets/og/2026-10-11-an-excuse-called-pain.png
+hidden: true
 ---
 
 In my previous post, I spent almost the entire time talking about my experience of pain. I tried different ways to explain it, tried to find a definitive answer or, to be more accurate, the excuse for it. And tried to justify why I was feeling that way. But funny thing is, after describing myself as the most miserable person in the world, I started asking myself, am I really suffering that bad? Because, I have absolutely no idea what I was suffering from. I just feel like I’m in pain, and that’s all. So if I can’t even explain what exactly is going on with me, does it really exist?

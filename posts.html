@@ -4,15 +4,19 @@ title: Posts
 permalink: /posts/
 body_class: catalog posts-page
 ---
+{% comment %} 头信息里写了 hidden: true 的文章不在这里出现，它们在“山的另一边”（the-other-side.html） {% endcomment %}
+{% assign shown = site.posts | where_exp: "p", "p.hidden != true" %}
+{% assign tags = "" | split: "" %}
+{% for p in shown %}{% assign tags = tags | concat: p.tags %}{% endfor %}
+{% assign tags = tags | uniq | sort %}
 <div class="cat">
-  <h1 class="cat-title">Posts<i aria-hidden="true"></i><sup id="post-count">{{ site.posts | size }}</sup></h1>
+  <h1 class="cat-title">Posts<i aria-hidden="true"></i><sup id="post-count">{{ shown | size }}</sup></h1>
   <div class="cat-list">
-    {% assign tags = site.tags | sort %}
     <div class="list-head">
     {% if tags.size > 0 %}
     <nav class="tag-filter" aria-label="Filter by tag">
       <a href="#" data-tag="" aria-current="true">All</a>
-      {% for tag in tags %}<a href="#t={{ tag[0] | uri_escape }}" data-tag="{{ tag[0] }}">{{ tag[0] }}</a>
+      {% for tag in tags %}<a href="#t={{ tag | uri_escape }}" data-tag="{{ tag }}">{{ tag }}</a>
       {% endfor %}
     </nav>
     {% endif %}
@@ -23,7 +27,7 @@ body_class: catalog posts-page
     </button>
     </div>
     <ul class="entries" aria-label="Posts">
-      {% for post in site.posts %}
+      {% for post in shown %}
       <li data-tags="{{ post.tags | join: '|' }}">
         <a class="row" href="{{ post.url | relative_url }}"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
           <span class="map-box" aria-hidden="true"><svg class="map" data-seed="{{ post.title | escape }}"></svg></span>
