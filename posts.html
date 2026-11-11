@@ -8,6 +8,7 @@ body_class: catalog posts-page
   <h1 class="cat-title">Posts<i aria-hidden="true"></i><sup id="post-count">{{ site.posts | size }}</sup></h1>
   <div class="cat-list">
     {% assign tags = site.tags | sort %}
+    <div class="list-head">
     {% if tags.size > 0 %}
     <nav class="tag-filter" aria-label="Filter by tag">
       <a href="#" data-tag="" aria-current="true">All</a>
@@ -15,10 +16,17 @@ body_class: catalog posts-page
       {% endfor %}
     </nav>
     {% endif %}
+    {% comment %} 右边的小按钮：在“地图集”和“列表”两种看法之间切换，浏览器会记住上次的选择 {% endcomment %}
+    <button class="view-toggle" type="button" aria-label="Switch between map grid and list">
+      <svg class="i-grid" viewBox="0 0 14 14" aria-hidden="true"><rect x="1" y="1" width="5" height="5"/><rect x="8" y="1" width="5" height="5"/><rect x="1" y="8" width="5" height="5"/><rect x="8" y="8" width="5" height="5"/></svg>
+      <svg class="i-list" viewBox="0 0 14 14" aria-hidden="true"><rect x="1" y="2" width="12" height="1.6"/><rect x="1" y="6.2" width="12" height="1.6"/><rect x="1" y="10.4" width="12" height="1.6"/></svg>
+    </button>
+    </div>
     <ul class="entries" aria-label="Posts">
       {% for post in site.posts %}
       <li data-tags="{{ post.tags | join: '|' }}">
         <a class="row" href="{{ post.url | relative_url }}"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
+          <span class="map-box" aria-hidden="true"><svg class="map" data-seed="{{ post.title | escape }}"></svg></span>
           <span class="n">{% if forloop.rindex < 10 %}0{% endif %}{{ forloop.rindex }}</span>{% comment %} 最早的一篇是 01，发新文章旧编号不变 {% endcomment %}
           <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>
           <span class="t">{% include title.html t=post.title %}</span>
@@ -32,6 +40,7 @@ body_class: catalog posts-page
     </ul>
   </div>
 </div>
+<script src="{{ '/assets/js/map.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
   var list = document.querySelector('.entries');
@@ -102,6 +111,28 @@ body_class: catalog posts-page
     apply(true);
   });
   window.addEventListener('hashchange', function () { apply(true); });
+  // 两种看法：地图集（每篇一张地图的小方格）和列表（每行前面一张小地图）。地图按当前大小重画
+  var root = document.documentElement, toggle = document.querySelector('.view-toggle');
+  function maps() {
+    if (!window.blMap) return;
+    var atlas = root.classList.contains('view-atlas');
+    [].forEach.call(document.querySelectorAll('.entries svg.map'), function (svg) {
+      svg.removeAttribute('data-drawn'); svg.setAttribute('data-levels', atlas ? 8 : 4);
+      var li = svg.closest('li'), off = li.hidden; li.hidden = false;   // 被标签筛掉的也要画，量得到大小才行
+      blMap.draw(svg); li.hidden = off;
+    });
+  }
+  if (toggle) toggle.addEventListener('click', function () {
+    var next = root.classList.contains('view-atlas') ? 'list' : 'atlas';
+    try { localStorage.setItem('bl-view', next); } catch (e) {}
+    clearTimeout(timer);
+    if (list) list.classList.add('fading');
+    timer = setTimeout(function () {
+      root.classList.remove('view-atlas', 'view-list'); root.classList.add('view-' + next);
+      maps(); lock(); apply(false);
+    }, 180);
+  });
+  maps();
   window.addEventListener('resize', function () { lock(); edge(); barEdge(); });
   lock();
   edge();

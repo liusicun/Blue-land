@@ -1,20 +1,39 @@
-// 主页的西西弗斯石头：开场只有石头，坡跟着它画出来，推到坡顶后标题出现；之后一遍遍往上推，总差一点到顶。点一下把石头再推上坡顶一次；连点 5 次，它会翻过去。
+// 主页的蓝色土地和西西弗斯的石头。
+// 页面下面是一整块蓝色的土地，上沿是一道坡，石头就在蓝白交界上滚。
+// 开场：先只有石头，土地跟着它从左往右长出来，推到坡顶后标题出现；
+// 之后一遍遍往上推，总差一点到顶。点一下土地，把石头再推上坡顶一次；连点 5 次，它会翻过去。
 (function () {
-  var root = document.documentElement, hill = document.querySelector('.hill'); if (!hill) return;
-  var path = hill.querySelector('path'), dot = hill.querySelector('circle'), push = hill.querySelector('.push');
-  var L = path.getTotalLength(), R = 4, cur = 0, drawing = false, drawn = 0;
+  var root = document.documentElement, land = document.querySelector('.land'); if (!land) return;
+  var fill = land.querySelector('.land-fill'), shape = land.querySelector('.land-shape'), clip = land.querySelector('clipPath path'),
+      lines = land.querySelector('.land-lines'), ridge = land.querySelector('.ridge'), dot = land.querySelector('circle'), push = land.querySelector('.push');
+  var R = 6, L = 0, W = 0, mapW = 0, cur = 0, drawing = false;
+  root.classList.add('land-on');
+
+  // 土地的形状跟着屏幕宽度算：左低右高，中间一段最陡
+  function lay() {
+    var w = land.clientWidth, h = land.clientHeight; if (!w || !h) return;
+    var yt = 2 * R + 6, rise = Math.min(h * .55, Math.max(64, w * .16)), yb = yt + rise;
+    var c = 'M0 ' + yb.toFixed(1) + ' C ' + (w * .34).toFixed(1) + ' ' + yb.toFixed(1) + ' ' + (w * .61).toFixed(1) + ' ' + (yt + rise * .12).toFixed(1) + ' ' + w + ' ' + yt;
+    var area = c + ' L ' + w + ' ' + h + ' L 0 ' + h + ' Z';
+    ridge.setAttribute('d', c); shape.setAttribute('d', area); clip.setAttribute('d', area);
+    L = ridge.getTotalLength(); W = w;
+    if (window.blMap && Math.abs(w - mapW) > 40) {   // 土地里的等高线；只在宽度变了的时候重画
+      mapW = w;
+      lines.innerHTML = blMap.markup('Blue Land', w, h, 11, w > 900 ? 8 : 5);
+    }
+    place(cur);
+  }
+  function at(d) { return ridge.getPointAtLength(L * (.035 + .93 * d)); }
   function place(d) {
     cur = d;
-    if (drawing) {               // 开场：坡跟着石头一点点画出来
-      drawn = Math.max(drawn, d);
-      path.style.strokeDasharray = L;
-      path.style.strokeDashoffset = (L * (1 - drawn)).toFixed(2);
-    }
-    var p = path.getPointAtLength(L * d);
+    var p = at(d);
+    if (drawing) fill.style.clipPath = fill.style.webkitClipPath = 'inset(0 ' + Math.max(0, W - p.x - R).toFixed(1) + 'px 0 0)';   // 开场：土地跟着石头长出来
     dot.setAttribute('cx', p.x.toFixed(2)); dot.setAttribute('cy', (p.y - R).toFixed(2));
   }
-  place(0);
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { root.classList.remove('stone-intro'); push.hidden = true; return; }
+  function grown() { drawing = false; fill.style.clipPath = fill.style.webkitClipPath = ''; }
+  lay();
+  addEventListener('resize', lay);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { root.classList.remove('stone-intro'); push.hidden = true; place(.8); return; }
   function ease(x) { return x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
 
   var TOP = .8, CYCLE = 12.4;
@@ -32,7 +51,7 @@
     var a = .6, b = a + up, c = b + 2.2, e = c + 3.4;
     if (s < a) return from;
     if (s < b) return from + (1 - from) * ease((s - a) / (b - a));
-    if (!shown) { shown = opened = true; root.classList.add('stone-done'); drawing = false; path.style.strokeDasharray = 'none'; path.style.strokeDashoffset = '0'; }
+    if (!shown) { shown = opened = true; root.classList.add('stone-done'); grown(); }
     if (s < c) return 1;
     if (s < e) return 1 - ease((s - c) / 3.4);
     mode = 'loop'; t0 = now;
@@ -40,7 +59,7 @@
   }
 
   if (root.classList.contains('stone-intro')) {
-    drawing = true; intro(0);
+    drawing = true; intro(0); place(0);
     try { sessionStorage.setItem('bl-intro', '1'); } catch (e) {}
   } else {
     mode = 'loop'; t0 = null; shown = true; opened = true;
@@ -56,15 +75,15 @@
   requestAnimationFrame(tick);
 
   // 彩蛋：几秒内连点 5 次，石头终于翻过坡顶，从另一边滚走，坡底再来一颗新的
-  var taps = [], end = path.getPointAtLength(L), ox = 0;
+  var taps = [];
   function over(d) { mode = 'over'; from = d; up = Math.max(.9, 1.6 * (1 - d)); t0 = null; taps = []; }
   function overAt(s, now) {   // 推到顶 → 翻过去、往下掉、淡出 → 停一下 → 坡底淡入一颗新的
-    var a = up, b = a + 1.1, c = b + .9, e = c + .7, k;
+    var a = up, b = a + 1.1, c = b + .9, e = c + .7, k, end = at(1);
     if (s < a) { dot.setAttribute('opacity', 1); return from + (1 - from) * ease(s / a); }
     if (s < b) {
       k = (s - a) / 1.1;
-      dot.setAttribute('cx', (end.x + 46 * k).toFixed(2));
-      dot.setAttribute('cy', (end.y - R - 5 * k + 60 * k * k).toFixed(2));
+      dot.setAttribute('cx', (end.x + 60 * k).toFixed(2));
+      dot.setAttribute('cy', (end.y - R - 8 * k + 90 * k * k).toFixed(2));
       dot.setAttribute('opacity', (1 - k * k).toFixed(3));
       return null;
     }

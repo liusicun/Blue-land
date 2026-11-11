@@ -103,10 +103,13 @@
       while (tn && tn.nodeType !== 3) tn = tn.lastChild;
       var m = tn && tn.nodeValue.match(/(\S+)\s*$/);
       if (m && tn.parentNode === last) {
+        // Chinese has no spaces, so the "last word" would be the whole sentence: keep only the last character and its punctuation
+        var word = m[1], at = m.index;
+        if (/[\u2e80-\u9fff\uf900-\ufaff\uff00-\uffef]/.test(word) && word.length > 2) { at += word.length - 2; word = word.slice(-2); }
         var end = document.createElement('span');
         end.className = 'end-dot';
-        end.textContent = m[1];
-        tn.nodeValue = tn.nodeValue.slice(0, m.index);
+        end.textContent = word;
+        tn.nodeValue = tn.nodeValue.slice(0, at);
         last.appendChild(end);
         last.classList.add('glued');
       } else if (tn && tn.parentNode !== last && !tn.parentNode.closest('.sidenote, sup')) {

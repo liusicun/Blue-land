@@ -9,11 +9,12 @@
 | `_posts/` | 文章，一篇一个 Markdown 文件 |
 | `about.md` | “关于”页，改成你自己的介绍 |
 | `_config.yml` | 站点名称、主页 slogan、网址等设置 |
-| `posts.html` | 文章列表页 |
+| `posts.html` | 文章目录页（地图集 / 列表两种看法，右上角小按钮切换） |
 | `_layouts/`、`_includes/` | 页面模板 |
 | `assets/css/style.css` | 样式（颜色、字体、排版） |
 | `assets/js/read.js` | 文章页的目录、看大图、旁注、回到顶部 |
-| `assets/js/stone.js` | 主页那颗西西弗斯的石头 |
+| `assets/js/stone.js` | 主页的蓝色土地和那颗西西弗斯的石头 |
+| `assets/js/map.js` | 按标题自动画的地形图（文章开头、主页土地里的等高线） |
 | `assets/og/` | 分享卡片图片 |
 | `_tools/share-cards.py` | 生成分享卡片的小程序 |
 
@@ -34,7 +35,7 @@
    ---
    ```
 
-3. 下面用 Markdown 写正文。网站默认是英文；中文文章在头信息里加一行 `lang: zh`，就会用中文排版。
+3. 下面用 Markdown 写正文。每篇文章开头会自动有一幅按标题画出来的地形图；某一篇不想要，在头信息里加一行 `map: false`。网站默认是英文；中文文章在头信息里加一行 `lang: zh`，就会用中文排版。
 4. 提交到 GitHub，一两分钟后网站自动更新。
 
 最省事的办法是直接在 GitHub 网页上操作：打开仓库的 `_posts` 文件夹 → **Add file** → **Create new file** → 写完点 **Commit changes**。手机上也能这样写。
