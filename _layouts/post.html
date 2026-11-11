@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<div class="progress" aria-hidden="true"></div>
+<svg class="progress" aria-hidden="true"><path/><circle r="4"/></svg>
 {% assign words = content | strip_html | number_of_words %}
 {% assign mins = words | divided_by: 200 | plus: 1 %}
 <article class="read">

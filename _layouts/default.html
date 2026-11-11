@@ -40,18 +40,32 @@
       });
       window.addEventListener('pageshow', function (e) { if (e.persisted) root.classList.remove('leave', 'arrive'); });
 
-      // 文章页顶部的阅读进度条
+      // 文章页顶部的阅读进度：一颗石头沿缓坡往上推，坡跟着它画出来，读完正好到顶
       var bar = document.querySelector('.progress');
       if (bar) {
-        var tick = false;
+        var slope = bar.querySelector('path'), stone = bar.querySelector('circle');
+        var R = 4, L = 0, tick = false;
+        var lay = function () {   // 坡的形状和主页那道一样：左下起步，右上到顶；宽度跟着屏幕走
+          var w = bar.clientWidth, h = bar.clientHeight;
+          var x0 = R + 6, x1 = w - R - 6, yb = h - 10, yt = 2 * R + 2, dx = x1 - x0, dy = yb - yt;
+          slope.setAttribute('d', 'M' + x0 + ' ' + yb + ' C ' + (x0 + dx * .34).toFixed(1) + ' ' + yb + ' ' +
+            (x0 + dx * .61).toFixed(1) + ' ' + (yt + dy * .12).toFixed(1) + ' ' + x1 + ' ' + yt);
+          L = slope.getTotalLength();
+          slope.style.strokeDasharray = L;
+        };
         var draw = function () {
-          var max = document.documentElement.scrollHeight - innerHeight;
-          bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, scrollY / max) : 0) + ')';
           tick = false;
+          var max = document.documentElement.scrollHeight - innerHeight;
+          var p = max > 0 ? Math.max(0, Math.min(1, scrollY / max)) : 0;
+          var pt = slope.getPointAtLength(L * p);
+          slope.style.strokeDashoffset = (L * (1 - p)).toFixed(2);
+          stone.setAttribute('cx', pt.x.toFixed(2)); stone.setAttribute('cy', (pt.y - R).toFixed(2));
+          bar.classList.toggle('on', max > 40);        // 一屏就读完的短文不显示
+          bar.classList.toggle('top', p > .995);       // 到顶了
         };
         addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(draw); } }, { passive: true });
-        addEventListener('resize', draw);
-        draw();
+        addEventListener('resize', function () { lay(); draw(); });
+        lay(); draw();
       }
     })();
   </script>
