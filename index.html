@@ -1,13 +1,19 @@
 ---
 layout: home
 title: Home
+body_class: has-land
 ---
 <section class="hero">
   <h1 class="hero-title"><span class="blue">Blue</span> Land<i aria-hidden="true"></i></h1>
   <p class="hero-slogan"{% if site.slogan_lang %} lang="{{ site.slogan_lang }}"{% endif %}>{{ site.slogan }}</p>
-  <div class="hill">
-    <svg viewBox="0 0 172 44" aria-hidden="true"><path d="M4 40 C 60 40 104 12 168 8"/><circle r="4" cx="4" cy="36"/></svg>
-    <button class="push" type="button" aria-label="Push the stone again"></button>
-  </div>
 </section>
+<!-- 蓝色的土地：形状、石头和等高线都由 stone.js / map.js 画 -->
+<div class="land">
+  <div class="land-fill" aria-hidden="true">
+    <svg><clipPath id="land-clip"><path/></clipPath><path class="land-shape"/><g class="land-lines" clip-path="url(#land-clip)"></g></svg>
+  </div>
+  <button class="push" type="button" aria-label="Push the stone again"></button>
+  <svg class="land-stone" aria-hidden="true"><path class="ridge"/><circle r="6"/></svg>
+</div>
+<script src="{{ '/assets/js/map.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/stone.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

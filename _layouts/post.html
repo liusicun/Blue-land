@@ -7,8 +7,14 @@ layout: default
 {% comment %} 中文没有空格，按字数算：每分钟 400 字 {% endcomment %}
 {% assign lang = page.lang | default: site.lang %}
 {% if lang contains "zh" %}{% assign chars = content | strip_html | strip_newlines | remove: " " | size %}{% assign mins = chars | divided_by: 400 | plus: 1 %}{% endif %}
+{% comment %} 这篇是第几篇（最早的一篇是 1），写在地形图下面 {% endcomment %}
+{% for p in site.posts %}{% if p.url == page.url %}{% assign num = forloop.rindex %}{% endif %}{% endfor %}
 <article class="read">
   <header class="read-head">
+    {% unless page.map == false %}<figure class="plate" aria-hidden="true">
+      <svg class="map" data-seed="{{ page.title | escape }}"></svg>
+      <figcaption>Map Nº {% if num < 10 %}0{% endif %}{{ num }}</figcaption>
+    </figure>{% endunless %}
     <h1 class="read-title">{% include title.html t=page.title dot='<i aria-hidden="true"></i>' %}</h1>
     {% if page.subtitle %}<p class="read-sub">{{ page.subtitle }}</p>{% endif %}
     <p class="read-meta">
@@ -20,10 +26,17 @@ layout: default
   <div class="prose{% if page.numbering == 'roman' %} roman{% endif %}">
     {{ content }}
   </div>
+  <div class="outro">
+  <svg class="outro-ridge" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100 C 34 100 61 14 100 0 L 100 100 Z"/></svg>
+  <div class="outro-in">
   <nav class="next-prev" aria-label="More posts">
     {% if page.previous %}<a class="np prev" href="{{ page.previous.url | relative_url }}"><span class="np-label">← Previous</span><span class="np-title"{% if page.previous.lang %} lang="{{ page.previous.lang }}"{% endif %}>{{ page.previous.title }}</span></a>{% else %}<span></span>{% endif %}
     {% if page.next %}<a class="np next" href="{{ page.next.url | relative_url }}"><span class="np-label">Next →</span><span class="np-title"{% if page.next.lang %} lang="{{ page.next.lang }}"{% endif %}>{{ page.next.title }}</span></a>{% endif %}
   </nav>
   <p class="read-all"><a href="{{ '/posts/' | relative_url }}">All posts</a></p>
+  <p class="outro-foot">© {{ site.time | date: "%Y" }} Blue Land</p>
+  </div>
+  </div>
 </article>
+<script src="{{ '/assets/js/map.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 <script src="{{ '/assets/js/read.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
