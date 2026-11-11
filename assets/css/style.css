@@ -412,11 +412,20 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 .entries .mt { display: none; }
 .entries .n { flex: none; width: 2.4em; font: 400 11px/1 var(--mono); letter-spacing: .08em; color: var(--blue); }
 
-/* 3. 文章页顶部的阅读进度条 */
+/* 3. 文章页顶部的阅读进度：西西弗斯的石头。往下读，石头沿一道缓坡往上推，坡跟着它画出来；
+      读完正好到坡顶。点进下一篇，又从坡底开始。形状在 _layouts/default.html 里算 */
 .progress {
-  position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 40;
-  background: var(--blue); transform-origin: 0 50%; transform: scaleX(0);
+  position: fixed; top: 0; left: 0; z-index: 40;
+  width: 100%; height: clamp(30px, 2.4vw + 21px, 46px);
+  /* 坡后面垫一层纸色，底下 10px 渐隐：正文滚到这里会淡出去，不会被坡线划过 */
+  background: linear-gradient(to bottom, var(--paper) calc(100% - 10px), transparent);
+  overflow: visible; pointer-events: none;
+  opacity: 0; transition: opacity .4s;
 }
+.progress.on { opacity: 1; }
+.progress path { fill: none; stroke: var(--muted); stroke-width: 1; opacity: .35; transition: stroke .5s, opacity .5s; }
+.progress circle { fill: var(--blue); }
+.progress.top path { stroke: var(--blue); opacity: .7; }   /* 到顶：整道坡亮成蓝色 */
 
 /* 5. 换页：内容淡出，中间一个蓝点放大，到了新页面再收回 */
 .veil { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; pointer-events: none; }
@@ -662,3 +671,70 @@ body { overflow-x: clip; }
 .stone-intro .hero-title, .stone-intro .hero-slogan { opacity: 0; animation: none; transition: opacity .5s; }
 .stone-intro.stone-done .hero-title { opacity: 1; transition: none; animation: rise 1.4s cubic-bezier(.2,.7,.2,1) both; }
 .stone-intro.stone-done .hero-slogan { opacity: 1; transition: none; animation: rise 1.4s cubic-bezier(.2,.7,.2,1) both .35s; }
+
+/* ---------- 打印 / 存成 PDF ----------
+   只留文字：白纸黑字，蓝点照旧；导航、动画、目录、进度石头、上下篇都不印。
+   夜间模式下打印也是白底。不想要就删掉这一整段 */
+@page { margin: 22mm 20mm 24mm; }
+@media print {
+  :root, :root[data-theme], :root:not([data-theme="print"]) {
+    --paper: #fff; --ink: #111318; --soft: #23262e; --muted: #5d606a; --line: #d9dbe2;
+    --blue: #1c33c9; --on-blue: #fff;
+    color-scheme: light;
+  }
+  *, *::before, *::after {
+    animation: none !important; transition: none !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;   /* 蓝点是背景色画的，不加这句会被浏览器省掉 */
+  }
+  html, body { background: #fff; }
+  body { overflow: visible; }
+
+  /* 不印的东西 */
+  .site-nav, .site-footer, .veil, .progress, .toc, .to-top, .lightbox,
+  .next-prev, .read-all, .tag-filter, .hill .push { display: none !important; }
+
+  /* 版面：一栏，高度跟内容走 */
+  .frame, .catalog .frame, .posts-page .frame { display: block; max-width: 34rem; margin: 0 auto; height: auto; min-height: 0; overflow: visible; padding: 0; opacity: 1 !important; }
+  main, .reading main { max-width: none; }
+  .site-header { padding-top: 0; }
+  .wordmark { font-size: 9pt; }
+
+  /* 文章 */
+  .read-head { margin: 22mm 0 12mm; }
+  .read-title { font-size: 30pt; }
+  .read-sub { font-size: 12pt; }
+  .read-meta { font-size: 8pt; }
+  .prose { font-size: 11.5pt; line-height: 1.8; }
+  .prose > p:first-child { font-size: 13pt; }
+  .prose:lang(zh) { font-size: 11pt; line-height: 1.95; }
+  .prose:lang(zh) > p:first-child { font-size: 12.5pt; }
+  .prose p { orphans: 3; widows: 3; }
+  .prose h2, .prose h3 { break-after: avoid; break-inside: avoid; }
+  .prose h2 { font-size: 15pt; margin-top: 2.6em; }
+  .prose h3 { font-size: 12pt; }
+  .prose blockquote { font-size: 12.5pt; }
+  .prose blockquote, .prose figure, .prose pre, .prose table, .prose img { break-inside: avoid; }
+  .prose figure { margin-left: 0; margin-right: 0; }
+  .prose figcaption { margin-left: 0; margin-right: 0; }
+  .prose img.zoomable { cursor: auto; }
+  .prose a { text-decoration-thickness: .5pt; }
+  .prose pre { white-space: pre-wrap; overflow: visible; }
+  .prose table { display: table; overflow: visible; }
+  /* 旁注：印在它出现的那一段下面 */
+  .prose.has-side .sidenote, .sidenote, .sidenote.open {
+    display: block; float: none; width: auto; margin: 8pt 0 12pt; padding: 1pt 0 1pt 12pt;
+    border-left: 1px solid var(--blue); font: 400 8.5pt/1.7 var(--mono); color: var(--muted);
+    break-inside: avoid;
+  }
+
+  /* 文章列表、关于页：不锁一屏，整页排开 */
+  .cat { display: block; min-height: 0; }
+  .cat-title { font-size: 40pt; margin-top: 14mm; }
+  .cat-list, .posts-page .cat-list { display: block; max-height: none; padding: 14mm 0 0; }
+  .cat-list .entries, .posts-page .cat-list .entries {
+    height: auto; min-height: 0 !important; overflow: visible; margin-right: 0; padding-right: 0;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .entries li[hidden] { display: none !important; }
+  .hero { padding: 60mm 0 0; }
+}
