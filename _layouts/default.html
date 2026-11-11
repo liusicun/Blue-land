@@ -21,6 +21,7 @@
         var next = cur === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);
         try { localStorage.setItem('bl-theme', next); } catch (e) {}
+        if (window.blTint) blTint(next);
       });
 
       // 换页动画：点站内链接时内容淡出、蓝点放大，新页面里再收回
@@ -31,7 +32,7 @@
         var a = e.target.closest && e.target.closest('a[href]');
         if (!a || a.target || a.hasAttribute('download')) return;
         var u = new URL(a.href, location.href);
-        if (u.origin !== location.origin || /\.xml$/.test(u.pathname)) return;
+        if (u.origin !== location.origin) return;
         if (u.pathname === location.pathname && u.search === location.search) return;
         e.preventDefault();
         try { sessionStorage.setItem('bl-go', '1'); } catch (err) {}
@@ -60,7 +61,7 @@
           var pt = slope.getPointAtLength(L * p);
           slope.style.strokeDashoffset = (L * (1 - p)).toFixed(2);
           stone.setAttribute('cx', pt.x.toFixed(2)); stone.setAttribute('cy', (pt.y - R).toFixed(2));
-          bar.classList.toggle('on', max > 40);        // 一屏就读完的短文不显示
+          bar.classList.toggle('on', max > 40 && scrollY > 6);   // 还没开始读、或一屏就读完的短文：不显示
           bar.classList.toggle('top', p > .995);       // 到顶了
         };
         addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(draw); } }, { passive: true });

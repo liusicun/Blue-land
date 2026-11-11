@@ -23,11 +23,6 @@
   src: url("../fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
   font-weight: 400; font-style: normal; font-display: swap;
 }
-@font-face {
-  font-family: "Instrument Serif";
-  src: url("../fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
-  font-weight: 400; font-style: italic; font-display: swap;
-}
 
 :root {
   --paper: #fafafb;
@@ -289,9 +284,9 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 }
 .prose > :first-child { margin-top: 0; }
 .prose p, .prose ul, .prose ol { margin: 0 0 1.5em; }
-/* 首段稍大，第一个字母蓝色下沉 */
-.prose > p:first-child { font-size: 21px; line-height: 1.8; color: var(--ink); }
-.prose > p:first-child::first-letter {
+/* 首段稍大，第一个字母蓝色下沉（文章以小标题开头时，算小标题后面那一段） */
+.prose > :is(p:first-child, h2:first-child + p) { font-size: 21px; line-height: 1.8; color: var(--ink); }
+.prose > :is(p:first-child, h2:first-child + p)::first-letter {
   float: left; margin: .1em .14em 0 -.02em;
   font: 700 3.3em/.82 var(--display); color: var(--blue);
 }
@@ -358,7 +353,7 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 .read-all a:hover { color: var(--blue); }
 @media (max-width: 760px) {
   .prose { font-size: 17px; }
-  .prose > p:first-child { font-size: 19px; }
+  .prose > :is(p:first-child, h2:first-child + p) { font-size: 19px; }
   .prose figure { margin-left: 0; margin-right: 0; }
   .prose figcaption { margin-left: 0; margin-right: 0; }
   .next-prev { grid-template-columns: 1fr; }
@@ -400,12 +395,12 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 
 /* ---------- 蓝色细节：只在“动”和“点”的地方出现 ---------- */
 /* 1. 悬停：变蓝，下面一条蓝线从左滑出 */
-.site-nav a, .entries .t, .tags a, .tag-filter a, .pager a, .facts a, .read-all a, .lost-home a {
+.site-nav a, .entries .t, .tags a, .tag-filter a, .facts a, .read-all a, .lost-home a {
   background: linear-gradient(var(--blue), var(--blue)) no-repeat 0 100% / 0 1px;
   padding-bottom: 2px;
   transition: background-size .32s cubic-bezier(.3,.7,.2,1), color .25s;
 }
-.site-nav a:hover, .tags a:hover, .tag-filter a:hover, .pager a:hover, .facts a:hover, .read-all a:hover, .lost-home a:hover,
+.site-nav a:hover, .tags a:hover, .tag-filter a:hover, .facts a:hover, .read-all a:hover, .lost-home a:hover,
 .entries .row:hover .t { background-size: 100% 1px; color: var(--blue); }
 
 /* 2. 列表前的蓝色小编号 */
@@ -413,7 +408,9 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 .entries .n { flex: none; width: 2.4em; font: 400 11px/1 var(--mono); letter-spacing: .08em; color: var(--blue); }
 
 /* 3. 文章页顶部的阅读进度：西西弗斯的石头。往下读，石头沿一道缓坡往上推，坡跟着它画出来；
-      读完正好到坡顶。点进下一篇，又从坡底开始。形状在 _layouts/default.html 里算 */
+      读完正好到坡顶。点进下一篇，又从坡底开始。还没开始读时什么都不显示。
+      手机和窄屏：坡横跨整个屏幕顶部；宽屏：收成右上角空白处的一座小坡，和主页那道一样陡。
+      形状在 _layouts/default.html 里算 */
 .progress {
   position: fixed; top: 0; left: 0; z-index: 40;
   width: 100%; height: clamp(30px, 2.4vw + 21px, 46px);
@@ -426,6 +423,12 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 .progress path { fill: none; stroke: var(--muted); stroke-width: 1; opacity: .35; transition: stroke .5s, opacity .5s; }
 .progress circle { fill: var(--blue); }
 .progress.top path { stroke: var(--blue); opacity: .7; }   /* 到顶：整道坡亮成蓝色 */
+@media (min-width: 1120px) {
+  .progress {
+    left: auto; right: calc(var(--gr) - 10px);
+    width: min(21rem, calc((100vw - 36rem) / 2 - 2rem)); height: 66px;
+  }
+}
 
 /* 5. 换页：内容淡出，中间一个蓝点放大，到了新页面再收回 */
 .veil { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; pointer-events: none; }
@@ -562,8 +565,8 @@ html.arrive .frame { animation: fade-in .44s ease both; }
 }
 .read-title:lang(zh) { font-weight: 700; letter-spacing: .04em; line-height: 1.3; }
 .prose:lang(zh) { font-size: 17px; line-height: 2.05; letter-spacing: .03em; text-align: justify; }
-.prose:lang(zh) > p:first-child { font-size: 19px; }
-.prose:lang(zh) > p:first-child::first-letter { font-size: 2.6em; line-height: 1; margin: .08em .14em 0 0; font-weight: 700; }
+.prose:lang(zh) > :is(p:first-child, h2:first-child + p) { font-size: 19px; }
+.prose:lang(zh) > :is(p:first-child, h2:first-child + p)::first-letter { font-size: 2.6em; line-height: 1; margin: .08em .14em 0 0; font-weight: 700; }
 .prose:lang(zh) h2 { letter-spacing: .08em; }
 .prose:lang(zh) blockquote { font-family: var(--serif); font-style: normal; font-size: 19px; line-height: 1.9; letter-spacing: .04em; }
 .prose:lang(zh) em { font-style: normal; text-emphasis: filled dot var(--blue); -webkit-text-emphasis: filled dot var(--blue); text-emphasis-position: under right; -webkit-text-emphasis-position: under; }
@@ -705,9 +708,9 @@ body { overflow-x: clip; }
   .read-sub { font-size: 12pt; }
   .read-meta { font-size: 8pt; }
   .prose { font-size: 11.5pt; line-height: 1.8; }
-  .prose > p:first-child { font-size: 13pt; }
+  .prose > :is(p:first-child, h2:first-child + p) { font-size: 13pt; }
   .prose:lang(zh) { font-size: 11pt; line-height: 1.95; }
-  .prose:lang(zh) > p:first-child { font-size: 12.5pt; }
+  .prose:lang(zh) > :is(p:first-child, h2:first-child + p) { font-size: 12.5pt; }
   .prose p { orphans: 3; widows: 3; }
   .prose h2, .prose h3 { break-after: avoid; break-inside: avoid; }
   .prose h2 { font-size: 15pt; margin-top: 2.6em; }

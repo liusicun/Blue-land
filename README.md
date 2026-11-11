@@ -13,12 +13,13 @@
 | `_layouts/`、`_includes/` | 页面模板 |
 | `assets/css/style.css` | 样式（颜色、字体、排版） |
 | `assets/js/read.js` | 文章页的目录、看大图、旁注、回到顶部 |
+| `assets/js/stone.js` | 主页那颗西西弗斯的石头 |
 | `assets/og/` | 分享卡片图片 |
 | `_tools/share-cards.py` | 生成分享卡片的小程序 |
 
 ## 改主页那句 slogan
 
-打开 `_config.yml`，改 `slogan:` 后面那句话就行。`slogan_lang:` 写这句话的语言（`fr` 法语、`en` 英语时用斜体衬线字；中文就删掉这一行）。
+打开 `_config.yml`，改 `slogan:` 后面那句话就行。`slogan_lang:` 写这句话的语言（`fr` 法语、`en` 英语；中文就删掉这一行）。
 
 ## 怎么写新文章
 

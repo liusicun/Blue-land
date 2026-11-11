@@ -4,6 +4,9 @@ layout: default
 <svg class="progress" aria-hidden="true"><path/><circle r="4"/></svg>
 {% assign words = content | strip_html | number_of_words %}
 {% assign mins = words | divided_by: 200 | plus: 1 %}
+{% comment %} 中文没有空格，按字数算：每分钟 400 字 {% endcomment %}
+{% assign lang = page.lang | default: site.lang %}
+{% if lang contains "zh" %}{% assign chars = content | strip_html | strip_newlines | remove: " " | size %}{% assign mins = chars | divided_by: 400 | plus: 1 %}{% endif %}
 <article class="read">
   <header class="read-head">
     <h1 class="read-title">{% include title.html t=page.title dot='<i aria-hidden="true"></i>' %}</h1>
