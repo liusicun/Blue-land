@@ -1,1 +1,5 @@
-<footer class="site-footer">© {{ site.time | date: "%Y" }} Blue Land</footer>
+{% comment %} 页脚上面一条细蓝线，是土地的轮廓：左低右高，和主页、文章结尾那片土地的上沿同一个形状 {% endcomment %}
+<footer class="site-footer">
+  <svg class="foot-ridge" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M0 100 C 34 100 61 14 100 0"/></svg>
+  <p>© {{ site.time | date: "%Y" }} Blue Land</p>
+</footer>

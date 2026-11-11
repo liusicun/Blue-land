@@ -394,7 +394,15 @@ main { flex: 1; width: 100%; max-width: 38rem; margin: 0 auto; }
 }
 
 /* ---------- footer ---------- */
-.site-footer { padding: 0 0 calc(32px + env(safe-area-inset-bottom, 0px)); text-align: center; font: 10px var(--mono); letter-spacing: .24em; color: var(--blue); }
+/* 页脚：版权字上面一条横跨页面的细蓝线，是土地的轮廓（左低右高），不填色；
+   和主页、文章结尾那片大土地的上沿是同一个形状 */
+.site-footer {
+  margin: 0 calc(-1 * var(--gr)) 0 calc(-1 * var(--gl));
+  text-align: center; font: 10px var(--mono); letter-spacing: .24em; color: var(--blue);
+}
+.foot-ridge { display: block; width: 100%; height: clamp(18px, 3vw, 44px); overflow: visible; }
+.foot-ridge path { fill: none; stroke: var(--blue); stroke-width: 1; transition: stroke .3s; }
+.site-footer p { margin: 0; padding: 14px 0 calc(24px + env(safe-area-inset-bottom, 0px)); }
 
 @media (max-width: 560px) {
   body { font-size: 16px; }
@@ -545,7 +553,7 @@ html.arrive .frame { animation: fade-in .44s ease both; }
   animation: hill-in 1s ease both .2s;
 }
 .lost-slope svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.lost-slope path { fill: none; stroke: var(--muted); stroke-width: 1; opacity: .35; }
+.lost-slope path { fill: var(--blue); transition: fill .3s; }   /* 一小块蓝色的土地，石头从上面滚下来 */
 @keyframes tumble {   /* 沿着坡滚下来，越滚越快，落地后多滚一点再停 */
   0%   { transform: translate(1.34em, -.53em); animation-timing-function: linear; }
   28%  { transform: translate(.97em, -.31em); animation-timing-function: linear; }
@@ -745,8 +753,9 @@ body { overflow-x: clip; }
 }
 .land .push:focus-visible { outline-color: var(--on-blue); outline-offset: -8px; }
 @media (hover: hover) { .land .push:hover ~ .land-stone circle { r: 7.5px; } }
-/* 版权那行小字落在土地上，用土地上的字色（没有 JS 时没有土地，保持原来的蓝字） */
+/* 主页：版权那行小字直接落在大块土地上，页脚那条轮廓线收起来（没有 JS 时没有大土地，轮廓线照常显示） */
 .land-on .has-land .site-footer { position: relative; z-index: 3; color: var(--on-blue); pointer-events: none; }
+.land-on .has-land .foot-ridge { display: none; }
 @keyframes hill-in { from { opacity: 0; } }
 /* 开场：先只有石头，土地由 stone.js 跟着石头长出来 */
 .stone-intro .land { animation: hill-in .8s ease both .1s; }
