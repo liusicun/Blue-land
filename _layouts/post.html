@@ -13,13 +13,15 @@ layout: default
 {% assign newer_i = at | minus: 1 %}{% assign older_i = at | plus: 1 %}
 {% assign newer = nil %}{% if at > 0 %}{% assign newer = group[newer_i] %}{% endif %}
 {% assign older = group[older_i] %}
-<article class="read">
+{% comment %} 标题以《「（这类左括号开头时，括号左半边是空的，看起来像缩进了：加个 hang，把它往左挂出去 {% endcomment %}
+{% assign first = page.title | slice: 0 %}{% assign hang = false %}{% if "《〈「『（【“‘" contains first %}{% assign hang = true %}{% endif %}
+<article class="read"{% if page.lang %} lang="{{ page.lang }}"{% endif %}>
   <header class="read-head">
     {% unless page.map == false %}<figure class="plate" aria-hidden="true">
       <svg class="map" data-seed="{{ page.title | escape }}"></svg>
       <figcaption>Map Nº {% if num < 10 %}0{% endif %}{{ num }}</figcaption>
     </figure>{% endunless %}
-    <h1 class="read-title">{% include title.html t=page.title dot='<i aria-hidden="true"></i>' %}</h1>
+    <h1 class="read-title{% if hang %} hang{% endif %}">{% include title.html t=page.title dot='<i aria-hidden="true"></i>' %}</h1>
     {% if page.subtitle %}<p class="read-sub">{{ page.subtitle }}</p>{% endif %}
     <p class="read-meta">
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time>

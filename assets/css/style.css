@@ -591,6 +591,11 @@ html.arrive .frame { animation: fade-in .44s ease both; }
 .prose:lang(zh) { font-family: var(--sans); font-size: 17px; line-height: 2.05; letter-spacing: .03em; text-align: justify; }
 .prose:lang(zh) > :is(p:first-child, h2:first-child + p) { font-size: 19px; }
 .prose:lang(zh) > :is(p:first-child, h2:first-child + p)::first-letter { font-family: var(--display); font-size: 2.6em; line-height: 1; margin: .08em .14em 0 0; font-weight: 700; }
+/* 中文标题：不在词中间断行（“哲 / 学”），只在标点和空格处换行；实在放不下才硬断。
+   标题和副标题各行尽量一样长，不留孤零零的一两个字 */
+.read-title:lang(zh), .entries .t:lang(zh), .side-t:lang(zh), .np-title:lang(zh) { word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+.read-title, .read-sub { text-wrap: balance; }
+.read-title.hang { text-indent: -.42em; }   /* 开头的《 往左挂出去，和下面的字对齐 */
 .prose:lang(zh) h2 { letter-spacing: .08em; }
 /* 两端对齐只用在正文段落；小标题、列表、引用里一行字少，对齐会把字距拉得很开 */
 .prose:lang(zh) :is(h2, h3, li, blockquote) { text-align: start; }
