@@ -29,6 +29,8 @@
     // 1. Contents in the left margin, the blue dot follows the section you are reading
     var hs = [].slice.call(prose.querySelectorAll('h2'));
     var toc = null, links = [];
+    var roman = prose.classList.contains('roman');   // numbering: roman → I II III, same as the headings
+    function rn(n) { var o = '', t = [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']]; t.forEach(function (p) { while (n >= p[0]) { o += p[1]; n -= p[0]; } }); return o; }
     if (hs.length >= 2) {
       toc = document.createElement('nav');
       toc.className = 'toc';
@@ -38,7 +40,7 @@
         var li = document.createElement('li'), a = document.createElement('a');
         a.href = '#' + (h.id || '');
         var n = document.createElement('span');
-        n.className = 'toc-n'; n.textContent = (i < 9 ? '0' : '') + (i + 1);
+        n.className = 'toc-n'; n.textContent = roman ? rn(i + 1) : (i < 9 ? '0' : '') + (i + 1);
         a.appendChild(n); a.appendChild(document.createTextNode(h.textContent));
         a.addEventListener('click', function (e) { e.preventDefault(); go(h); });
         li.appendChild(a); ol.appendChild(li); links.push(a);

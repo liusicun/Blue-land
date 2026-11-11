@@ -19,7 +19,7 @@ body_class: catalog posts-page
       {% for post in site.posts %}
       <li data-tags="{{ post.tags | join: '|' }}">
         <a class="row" href="{{ post.url | relative_url }}"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
-          <span class="n">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+          <span class="n">{% if forloop.rindex < 10 %}0{% endif %}{{ forloop.rindex }}</span>{% comment %} 最早的一篇是 01，发新文章旧编号不变 {% endcomment %}
           <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y.%m.%d" }}</time>
           <span class="t">{% include title.html t=post.title %}</span>
           {% if post.tags.size > 0 %}<span class="mt">{{ post.tags | join: ' · ' }}</span>{% endif %}
