@@ -6,6 +6,7 @@ date: 2026-10-10 21:00:00 +0800
 tags: [Notes]
 numbering: roman
 image: /assets/og/2026-10-10-try-to-name-my-pain.png
+hidden: true
 ---
 
 ## Where to start

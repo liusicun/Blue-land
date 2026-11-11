@@ -8,7 +8,8 @@ body_class: has-land
   <p class="hero-slogan"{% if site.slogan_lang %} lang="{{ site.slogan_lang }}"{% endif %}>{{ site.slogan }}</p>
 </section>
 <!-- 蓝色的土地：形状、石头和等高线都由 stone.js / map.js 画 -->
-<div class="land">
+{% assign hid = site.posts | where_exp: "p", "p.hidden == true" %}
+<div class="land"{% if hid.size > 0 %} data-over="{{ '/the-other-side/' | relative_url }}"{% endif %}>
   <div class="land-fill" aria-hidden="true">
     <svg><clipPath id="land-clip"><path/></clipPath><path class="land-shape"/><g class="land-lines" clip-path="url(#land-clip)"></g></svg>
   </div>
