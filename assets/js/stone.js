@@ -28,7 +28,10 @@
   function place(d) {
     cur = d;
     var p = at(d);
-    if (drawing) fill.style.clipPath = fill.style.webkitClipPath = 'inset(0 ' + Math.max(0, W - p.x - R).toFixed(1) + 'px 0 0)';   // 开场：土地跟着石头长出来
+    if (drawing) {   // 开场：土地跟着石头长出来。边缘比石头领先一点点，石头到顶时土地正好长满整屏
+      var rest = Math.max(0, W - at(1).x - R), edge = p.x + R + rest * Math.min(1, Math.max(0, d));
+      fill.style.clipPath = fill.style.webkitClipPath = 'inset(0 ' + Math.max(0, W - edge).toFixed(1) + 'px 0 0)';
+    }
     dot.setAttribute('cx', p.x.toFixed(2)); dot.setAttribute('cy', (p.y - R).toFixed(2));
   }
   function grown() { drawing = false; fill.style.clipPath = fill.style.webkitClipPath = ''; }
@@ -78,23 +81,26 @@
   // 彩蛋：几秒内连点 5 次，石头终于翻过坡顶，从另一边滚走，坡底再来一颗新的
   var taps = [], overUrl = land.getAttribute('data-over'), gone = false;
   addEventListener('pageshow', function () { gone = false; });   // 从另一边按返回键回来，可以再翻一次
+  function leave() {   // 跟着石头去山的另一边
+    gone = true;
+    try { sessionStorage.setItem('bl-go', '1'); } catch (err) {}
+    root.classList.add('leave');
+    setTimeout(function () { location.href = overUrl; }, 320);
+  }
   function over(d) { mode = 'over'; from = d; up = Math.max(.9, 1.6 * (1 - d)); t0 = null; taps = []; }
-  function overAt(s, now) {   // 推到顶 → 翻过去、往下掉、淡出 → 停一下 → 坡底淡入一颗新的
-    var a = up, b = a + 1.1, c = b + .9, e = c + .7, k, end = at(1);
+  function overAt(s, now) {   // 推到顶 → 不停，顺着坡顶越滚越快，滚出屏幕右边 → 停一下 → 坡底淡入一颗新的
+    var a = up, b = a + .75, c = b + .9, e = c + .7, k, end = at(1), lip = ridge.getPointAtLength(L);
     if (s < a) { dot.setAttribute('opacity', 1); return from + (1 - from) * ease(s / a); }
     if (s < b) {
-      k = (s - a) / 1.1;
-      dot.setAttribute('cx', (end.x + 60 * k).toFixed(2));
-      dot.setAttribute('cy', (end.y - R - 8 * k + 90 * k * k).toFixed(2));
-      dot.setAttribute('opacity', (1 - k * k).toFixed(3));
+      k = (s - a) / .75;
+      var x = end.x + (W + R * 3 - end.x) * k * k;                       // 从静止开始加速
+      var t = Math.min(1, (x - end.x) / Math.max(1, lip.x - end.x));     // 还在屏幕里的那一小段，贴着坡走
+      dot.setAttribute('cx', x.toFixed(2));
+      dot.setAttribute('cy', (end.y + (lip.y - end.y) * t - R).toFixed(2));
+      if (overUrl && !gone && k > .55) leave();                           // 石头快出屏幕时，页面开始跟过去
       return null;
     }
-    if (overUrl && !gone) {   // 石头滚下去了：跟过去看看
-      gone = true;
-      try { sessionStorage.setItem('bl-go', '1'); } catch (err) {}
-      root.classList.add('leave');
-      setTimeout(function () { location.href = overUrl; }, 320);
-    }
+    if (overUrl && !gone) leave();
     if (s < c) { dot.setAttribute('opacity', 0); return 0; }
     if (s < e) { dot.setAttribute('opacity', ((s - c) / .7).toFixed(3)); return 0; }
     dot.setAttribute('opacity', 1); mode = 'loop'; t0 = now; return 0;
