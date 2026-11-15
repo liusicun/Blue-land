@@ -45,7 +45,8 @@
       var bar = document.querySelector('.progress');
       if (bar) {
         var slope = bar.querySelector('path'), stone = bar.querySelector('circle');
-        var R = 4, L = 0, tick = false;
+        var R = 4, L = 0, tick = false, clear = 6;
+        var head = document.querySelector('.site-header');
         var lay = function () {   // 坡的形状和主页那道一样：左下起步，右上到顶；宽度跟着屏幕走
           var w = bar.clientWidth, h = bar.clientHeight;
           var x0 = R + 6, x1 = w - R - 6, yb = h - 10, yt = 2 * R + 2, dx = x1 - x0, dy = yb - yt;
@@ -53,6 +54,8 @@
             (x0 + dx * .61).toFixed(1) + ' ' + (yt + dy * .12).toFixed(1) + ' ' + x1 + ' ' + yt);
           L = slope.getTotalLength();
           slope.style.strokeDasharray = L;
+          // 页眉（Blue Land、Posts、About）完全滚出屏幕以后石头才出现，坡线不会压在它们上面
+          clear = head ? head.getBoundingClientRect().bottom + scrollY + 4 : 6;
         };
         var draw = function () {
           tick = false;
@@ -61,7 +64,7 @@
           var pt = slope.getPointAtLength(L * p);
           slope.style.strokeDashoffset = (L * (1 - p)).toFixed(2);
           stone.setAttribute('cx', pt.x.toFixed(2)); stone.setAttribute('cy', (pt.y - R).toFixed(2));
-          bar.classList.toggle('on', max > 40 && scrollY > 6);   // 还没开始读、或一屏就读完的短文：不显示
+          bar.classList.toggle('on', max > 40 && scrollY > clear);   // 还没开始读、或一屏就读完的短文：不显示
           bar.classList.toggle('top', p > .995);       // 到顶了
         };
         addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(draw); } }, { passive: true });
